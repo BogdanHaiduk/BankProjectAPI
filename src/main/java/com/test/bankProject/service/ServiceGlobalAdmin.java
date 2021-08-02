@@ -35,7 +35,8 @@ public class ServiceGlobalAdmin {
     public List<AbstractBankAccountDto> allUserInBankSystem(String token) {
         BankAccount adminGlobal = componentForService.searchBankAccountByToken(token);
         if (componentForService.checkRoleGlobalAdmin(adminGlobal)) {
-            return GlobalAdminUserDto.forAllUserBankInSystem(componentForService.getBankAccountRepository().findAll());
+            return GlobalAdminUserDto.forAllUserBankInSystem(componentForService.getBankAccountRepository().findAll(),
+                    componentForService);
         }
         return null;
     }

@@ -4,6 +4,7 @@ package com.test.bankProject.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.test.bankProject.entity.BankAccount;
 import com.test.bankProject.entity.Role;
+import com.test.bankProject.service.ComponentForService;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -14,7 +15,8 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GlobalAdminUserDto extends BankAccountDto {
 
-    public static List<AbstractBankAccountDto> forAllUserBankInSystem(List<BankAccount> allUserBankSystem){
+    public static List<AbstractBankAccountDto> forAllUserBankInSystem(List<BankAccount> allUserBankSystem,
+                                                                      ComponentForService componentForService){
         List<AbstractBankAccountDto> allUserBankSystemDtoList = new LinkedList<>();
         List<AbstractBankAccountDto> globalAdminListDto = new ArrayList<>();
         List<AbstractBankAccountDto> simpleAdminListDto = new ArrayList<>();
@@ -23,8 +25,8 @@ public class GlobalAdminUserDto extends BankAccountDto {
         for (BankAccount bankAccount : allUserBankSystem) {
 
             var userDto = new GlobalAdminUserDto();
-            var abstractBankAccountDto = userDto.impl(userDto, bankAccount, null);
-
+            var abstractBankAccountDto = userDto.impl(userDto, bankAccount,
+                    componentForService.searchBankAccountByID(bankAccount.getBankFamilyAccount().getBankAdminFamilyAccountId()));
             long idRole = 0 ;
             for (Role role: bankAccount.getRoles()) idRole = role.getId();
             if (idRole == 3)globalAdminListDto.add(abstractBankAccountDto);
