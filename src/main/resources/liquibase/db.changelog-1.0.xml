@@ -1,0 +1,181 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <!-- Entity -->
+    <changeSet id ="1.0.0" author="bogdan.haiduk">
+        <createTable tableName="bank_account">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="limit_static" type="NUMERIC" defaultValue="0">
+            </column>
+            <column name="limit_today" type="NUMERIC" defaultValue="0">
+            </column>
+            <column name="date_for_limit" type="timestamp">
+            </column>
+            <column name="limit_lock_time" type="BOOLEAN" defaultValue="false">
+            </column>
+            <column name="lock_account" type="BOOLEAN" defaultValue="false">
+            </column>
+            <column name="username" type="VARCHAR(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="password" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="family_limit_lock" type="BOOLEAN" defaultValue="false">
+            </column>
+            <column name="id_family_bank_account" type="BIGINT">
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id ="1.0.1" author="bogdan.haiduk">
+        <createTable tableName="roles">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id ="1.0.2" author="bogdan.haiduk">
+        <createTable tableName="bank_account_roles">
+            <column name="bank_account_id" type="BIGINT">
+            </column>
+            <column name="role_id" type="BIGINT">
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id ="1.0.3" author="bogdan.haiduk">
+        <createTable tableName="bank_family_account">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="limit_static" type="NUMERIC" defaultValue="0">
+            </column>
+            <column name="limit_today" type="NUMERIC" defaultValue="0">
+            </column>
+            <column name="date_for_limit" type="timestamp">
+            </column>
+            <column name="limit_lock_time" type="BOOLEAN" defaultValue="false">
+            </column>
+            <column name="lock_account" type="BOOLEAN" defaultValue="false">
+            </column>
+            <column name="bank_admin_family_account_id" type="BIGINT">
+                <constraints nullable="false"></constraints>
+            </column>
+            <column name="balance_money_family" type="NUMERIC">
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- FK -->
+
+    <changeSet id ="1.0.4" author="bogdan.haiduk">
+        <addForeignKeyConstraint baseColumnNames="bank_account_id"
+                                 baseTableName="bank_account_roles"
+                                 constraintName="fk_bank_account_roles_usr"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="bank_account"/>
+    </changeSet>
+
+    <changeSet id ="1.0.5" author="bogdan.haiduk">
+        <addForeignKeyConstraint baseColumnNames="role_id"
+                                 baseTableName="bank_account_roles"
+                                 constraintName="fk_bank_account_roles_roles"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="roles"/>
+    </changeSet>
+
+    <changeSet id ="1.0.7" author="bogdan.haiduk">
+        <addForeignKeyConstraint baseColumnNames="id_family_bank_account"
+                                 baseTableName="bank_account"
+                                 constraintName="fk_bank_account_bank_id_family_bank_account"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="bank_family_account"/>
+    </changeSet>
+
+    <!--INSERT-->
+
+    <changeSet id ="1.0.8" author="bogdan.haiduk">
+        <insert tableName="roles">
+            <column name="name" value="ROLE_USR">
+            </column>
+        </insert>
+        <insert tableName="roles">
+            <column name="name" value="ROLE_FAMILYADMIN">
+            </column>
+        </insert>
+        <insert tableName="roles">
+            <column name="name" value="ROLE_GLOBALADMIN">
+            </column>
+        </insert>
+    </changeSet>
+
+    <changeSet id ="1.0.9" author="bogdan.haiduk">
+        <insert tableName="bank_account">
+            <column name="username" value="Tom"></column>
+            <column name="password" value="$2y$04$ocnZsFOm0j62c/I.7.UrGeKQKeWUakJ.cVRs.xTHn.M0G/raJ217a"></column>
+        </insert>
+        <insert tableName="bank_account">
+            <column name="username" value="Donald"></column>
+            <column name="password" value="$2y$04$ocnZsFOm0j62c/I.7.UrGeKQKeWUakJ.cVRs.xTHn.M0G/raJ217a"></column>
+        </insert>
+        <insert tableName="bank_account">
+            <column name="username" value="Jerry"></column>
+            <column name="password" value="$2y$04$ocnZsFOm0j62c/I.7.UrGeKQKeWUakJ.cVRs.xTHn.M0G/raJ217a"></column>
+        </insert>
+        <insert tableName="bank_account">
+            <column name="username" value="Andre"></column>
+            <column name="password" value="$2y$04$ocnZsFOm0j62c/I.7.UrGeKQKeWUakJ.cVRs.xTHn.M0G/raJ217a"></column>
+        </insert>
+        <insert tableName="bank_account">
+            <column name="username" value="Lev"></column>
+            <column name="password" value="$2y$04$ocnZsFOm0j62c/I.7.UrGeKQKeWUakJ.cVRs.xTHn.M0G/raJ217a"></column>
+        </insert>
+        <insert tableName="bank_account">
+            <column name="username" value="Barack"></column>
+            <column name="password" value="$2y$04$ocnZsFOm0j62c/I.7.UrGeKQKeWUakJ.cVRs.xTHn.M0G/raJ217a"></column>
+        </insert>
+    </changeSet>
+
+    <changeSet id ="1.0.10" author="bogdan.haiduk">
+        <insert tableName="bank_account_roles">
+            <column name="bank_account_id" value="1"></column>
+            <column name="role_id" value="2"></column>
+        </insert>
+        <insert tableName="bank_account_roles">
+            <column name="bank_account_id" value="2"></column>
+            <column name="role_id" value="3"></column>
+        </insert>
+        <insert tableName="bank_account_roles">
+            <column name="bank_account_id" value="3"></column>
+            <column name="role_id" value="1"></column>
+        </insert>
+        <insert tableName="bank_account_roles">
+            <column name="bank_account_id" value="4"></column>
+            <column name="role_id" value="1"></column>
+        </insert>
+        <insert tableName="bank_account_roles">
+            <column name="bank_account_id" value="5"></column>
+            <column name="role_id" value="1"></column>
+        </insert>
+        <insert tableName="bank_account_roles">
+            <column name="bank_account_id" value="6"></column>
+            <column name="role_id" value="1"></column>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
