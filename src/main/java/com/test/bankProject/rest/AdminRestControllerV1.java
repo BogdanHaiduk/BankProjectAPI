@@ -1,6 +1,6 @@
 package com.test.bankProject.rest;
 
-import com.test.bankProject.dto.AuthenticationRequestDto;
+import com.test.bankProject.dto.RequestDto;
 import com.test.bankProject.dto.AbstractBankAccountDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -43,44 +43,44 @@ public class AdminRestControllerV1 {
 
     @PostMapping(value = "addNewPersonFamily")
     public String addNewPersonFamily(@RequestHeader(name = "Authorization") String token,
-                                             @RequestBody AuthenticationRequestDto authenticationRequestDto){
-        return serviceAdmin.addNewPersonFamily(token,authenticationRequestDto);
+                                             @RequestBody RequestDto requestDto){
+        return serviceAdmin.addNewPersonFamily(token, requestDto);
     }
 
 //Лимиты:
     @PostMapping(value = "static/limitMoneyForAllFamily")
     public void limitMoneyForAllFamily (@RequestHeader (name = "Authorization") String token,
-                                                  @RequestBody AuthenticationRequestDto authenticationRequestDto){
-        serviceAdmin.limitMoneyForAllFamily(token,authenticationRequestDto, false);
+                                                  @RequestBody RequestDto requestDto){
+        serviceAdmin.limitMoneyForAllFamily(token, requestDto, false);
     }
 
     @PostMapping(value = "limitOnDayForAllFamily")
     public void limitOnDayForAllFamily (@RequestHeader (name = "Authorization") String token,
-                                        @RequestBody AuthenticationRequestDto authenticationRequestDto){
-        serviceAdmin.limitMoneyForAllFamily(token,authenticationRequestDto, true);
+                                        @RequestBody RequestDto requestDto){
+        serviceAdmin.limitMoneyForAllFamily(token, requestDto, true);
     }
 
 //Лимит без ограничений на время и его без автоматического обновления
     @PostMapping(value = "static/limitMoneyForOneMemberFamily")
     public ResponseEntity<AbstractBankAccountDto> limitMoneyForOneMemberFamily (@RequestHeader (name = "Authorization") String token,
-                                                                                @RequestBody AuthenticationRequestDto authenticationRequestDto)
+                                                                                @RequestBody RequestDto requestDto)
     {
-        return new ResponseEntity<>(serviceAdmin.limitMoneyForOneMemberFamily(token, authenticationRequestDto, false),HttpStatus.OK);
+        return new ResponseEntity<>(serviceAdmin.limitMoneyForOneMemberFamily(token, requestDto, false),HttpStatus.OK);
     }
 
 //Лимит с ограничением на время и с автоматическим обновлением
     @PostMapping(value = "limitOnDayForOneMemberFamily")
     public ResponseEntity<AbstractBankAccountDto> limitOnDayForOneMemberFamily(@RequestHeader(name = "Authorization") String token,
-                                                                               @RequestBody AuthenticationRequestDto authenticationRequestDto)
+                                                                               @RequestBody RequestDto requestDto)
     {
-        return new ResponseEntity<>(serviceAdmin.limitMoneyForOneMemberFamily(token, authenticationRequestDto, true),HttpStatus.OK);
+        return new ResponseEntity<>(serviceAdmin.limitMoneyForOneMemberFamily(token, requestDto, true),HttpStatus.OK);
     }
 
 //Снятие личных ограничений с пользователя и открыт доступ к общему лимиту денег для снятия всей семьи
     @PostMapping(value = "liftingOfPersonalRestrictions/ForOneMemberFamily")
     public ResponseEntity<AbstractBankAccountDto> liftingOfPersonalRestrictions(@RequestHeader(name = "Authorization") String token,
-                                                                                @RequestBody AuthenticationRequestDto authenticationRequestDto){
-        return new ResponseEntity<>(serviceAdmin.liftingOfPersonalRestrictions(token,authenticationRequestDto),
+                                                                                @RequestBody RequestDto requestDto){
+        return new ResponseEntity<>(serviceAdmin.liftingOfPersonalRestrictions(token, requestDto),
                 HttpStatus.OK);
     }
 

@@ -5,7 +5,7 @@ import lombok.Data;
 import java.math.BigDecimal;
 
 @Data
-public class AuthenticationRequestDto {
+public class RequestDto {
     private Long id;
     private Long idBankFamilyAccount;
     private String username;

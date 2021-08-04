@@ -5,8 +5,8 @@ import java.math.BigDecimal;
 
 public class LogicMoney {
 
-    private BankAccount bankAccount;
-    private BigDecimal cashWithdrawal;
+    private final BankAccount bankAccount;
+    private final BigDecimal cashWithdrawal;
     private boolean resultLogicLimitMoney = false;
     private final ComponentForService componentForService;
 
@@ -44,19 +44,19 @@ public class LogicMoney {
         }
 
 
-//        if(bankAccount.getBankFamilyAccount().getLimitMoneyFamily()!=null&&
-//                bankAccount.getBankFamilyAccount().getLimitMoneyFamily().signum()>0&&
-//                bankAccount.isFamilyLimitLock())
-//        {
-//            limit = bankAccount.getBankFamilyAccount().getLimitMoneyFamily();
-//            if(logicLimitMoney( money, limit, cashWithdrawal)) {
-//                bankAccount.getBankFamilyAccount().
-//                        setBalanceMoneyFamily(money.subtract(cashWithdrawal));
-//                bankAccount.getBankFamilyAccount().
-//                        setLimitMoneyFamily(limit.subtract(cashWithdrawal));
-//                componentForService.getBankAccountRepository().save(bankAccount);
-//            }
-//        }
+        if(bankAccount.getBankFamilyAccount().getLimitToday()!=null&&
+                bankAccount.getBankFamilyAccount().getLimitToday().signum()>0&&
+                bankAccount.isFamilyLimitLock())
+        {
+            limit = bankAccount.getBankFamilyAccount().getLimitToday();
+            if(logicLimitMoney( money, limit, cashWithdrawal)) {
+                bankAccount.getBankFamilyAccount().
+                        setBalanceMoneyFamily(money.subtract(cashWithdrawal));
+                bankAccount.getBankFamilyAccount().
+                        setLimitToday(limit.subtract(cashWithdrawal));
+                componentForService.getBankAccountRepository().save(bankAccount);
+            }
+        }
     }
 
     private boolean logicLimitMoney( BigDecimal money, BigDecimal limit, BigDecimal cashWithdrawal){

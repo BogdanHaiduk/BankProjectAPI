@@ -19,10 +19,10 @@ public class ServiceGlobalAdmin {
         this.componentForService = componentForService;
     }
 
-    private void allowLogicStaticOrDayLimit(BaseEntity baseEntity, AuthenticationRequestDto authenticationRequestDto,
+    private void allowLogicStaticOrDayLimit(BaseEntity baseEntity, RequestDto requestDto,
                                             boolean onDay){
         baseEntity.setLockAccount(false);
-        componentForService.logicStaticOrDayLimit(baseEntity, authenticationRequestDto, onDay);
+        componentForService.logicStaticOrDayLimit(baseEntity, requestDto, onDay);
         baseEntity.setLockAccount(true);
     }
 
@@ -35,19 +35,19 @@ public class ServiceGlobalAdmin {
     public List<AbstractBankAccountDto> allUserInBankSystem(String token) {
         BankAccount adminGlobal = componentForService.searchBankAccountByToken(token);
         if (componentForService.checkRoleGlobalAdmin(adminGlobal)) {
-            return GlobalAdminUserDto.forAllUserBankInSystem(componentForService.getBankAccountRepository().findAll(),
+            return ImplementDto.forAllUserBankInSystem(componentForService.getBankAccountRepository().findAll(),
                     componentForService);
         }
         return null;
     }
 
-    public void limitForAll(String token, AuthenticationRequestDto authenticationRequestDto, boolean onDay) {
+    public void limitForAll(String token, RequestDto requestDto, boolean onDay) {
         BankAccount adminGlobal = componentForService.searchBankAccountByToken(token);
 
         if (componentForService.checkRoleGlobalAdmin(adminGlobal)) {
             for(BankAccount bankAccount:componentForService.getBankAccountRepository().findAll()){
                 bankAccount.setLockAccount(false);
-                componentForService.logicStaticOrDayLimit(bankAccount,authenticationRequestDto,onDay);
+                componentForService.logicStaticOrDayLimit(bankAccount, requestDto,onDay);
                 bankAccount.setLockAccount(true);
                 bankAccount.setFamilyLimitLock(false);
                 componentForService.saveBankAccount(bankAccount);
@@ -61,14 +61,14 @@ public class ServiceGlobalAdmin {
         }
     }
 
-    public AbstractBankAccountDto limitForSelectedFamily(String token, AuthenticationRequestDto authenticationRequestDto, boolean onDay) {
+    public AbstractBankAccountDto limitForSelectedFamily(String token, RequestDto requestDto, boolean onDay) {
         BankAccount adminGlobal = componentForService.searchBankAccountByToken(token);
-        BankFamilyAccount bankFamilyAccount = componentForService.searchBankFamilyAccountByID(authenticationRequestDto.getIdBankFamilyAccount());
+        BankFamilyAccount bankFamilyAccount = componentForService.searchBankFamilyAccountByID(requestDto.getIdBankFamilyAccount());
 
         if (componentForService.checkRoleGlobalAdmin(adminGlobal)) {
 
             List<BankAccount> bankAccountList = bankFamilyAccount.getBankAccounts();
-            allowLogicStaticOrDayLimit(bankFamilyAccount,authenticationRequestDto,onDay);
+            allowLogicStaticOrDayLimit(bankFamilyAccount, requestDto,onDay);
 
             for (BankAccount bankAccount : bankAccountList) {
                 allowLogicForLiftingOfRestrictions(bankAccount);
@@ -80,26 +80,26 @@ public class ServiceGlobalAdmin {
             componentForService.saveBankFamilyAccount(bankFamilyAccount);
         }
 
-        return BankFamilyAccountDto.anyBankFamilyAccountDto(bankFamilyAccount);
+        return ImplementDto.infoAnyFamilyAccountDto(bankFamilyAccount,componentForService);
     }
 
-    public AbstractBankAccountDto limitForSelectedPerson (String token, AuthenticationRequestDto authenticationRequestDto, boolean onDay){
+    public AbstractBankAccountDto limitForSelectedPerson (String token, RequestDto requestDto, boolean onDay){
         BankAccount adminGlobal = componentForService.searchBankAccountByToken(token);
-        BankAccount bankAccount = componentForService.searchBankAccountByID(authenticationRequestDto.getId());
+        BankAccount bankAccount = componentForService.searchBankAccountByID(requestDto.getId());
         BankAccount adminFamily = componentForService.searchBankAccountByID(bankAccount.getBankFamilyAccount().getBankAdminFamilyAccountId());
 
         if (componentForService.checkRoleGlobalAdmin(adminGlobal)) {
             bankAccount.setFamilyLimitLock(false);
-            allowLogicStaticOrDayLimit(bankAccount,authenticationRequestDto,onDay);
+            allowLogicStaticOrDayLimit(bankAccount, requestDto,onDay);
             componentForService.saveBankAccount(bankAccount);
         }
 
-        return BankAccountDto.infoAnyAccount(bankAccount, adminFamily);
+        return ImplementDto.infoAnyAccount(bankAccount, componentForService);
     }
 
-    public void liftingOfPersonalRestrictionsForFamily(String token, AuthenticationRequestDto authenticationRequestDto) {
+    public void liftingOfPersonalRestrictionsForFamily(String token, RequestDto requestDto) {
         BankAccount adminGlobal = componentForService.searchBankAccountByToken(token);
-        BankFamilyAccount bankFamilyAccount = componentForService.searchBankFamilyAccountByID(authenticationRequestDto.getIdBankFamilyAccount());
+        BankFamilyAccount bankFamilyAccount = componentForService.searchBankFamilyAccountByID(requestDto.getIdBankFamilyAccount());
 
         if(componentForService.checkRoleGlobalAdmin(adminGlobal)){
             allowLogicForLiftingOfRestrictions(bankFamilyAccount);
@@ -116,9 +116,9 @@ public class ServiceGlobalAdmin {
 
     }
 
-    public void liftingOfPersonalRestrictionsForPerson(String token, AuthenticationRequestDto authenticationRequestDto) {
+    public void liftingOfPersonalRestrictionsForPerson(String token, RequestDto requestDto) {
         BankAccount adminGlobal = componentForService.searchBankAccountByToken(token);
-        BankAccount bankAccount = componentForService.searchBankAccountByID(authenticationRequestDto.getId());
+        BankAccount bankAccount = componentForService.searchBankAccountByID(requestDto.getId());
 
         if(componentForService.checkRoleGlobalAdmin(adminGlobal)){
             allowLogicForLiftingOfRestrictions(bankAccount);

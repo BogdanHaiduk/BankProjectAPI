@@ -1,11 +1,8 @@
 package com.test.bankProject.service;
 
-import com.test.bankProject.dto.BankFamilyAccountDto;
+import com.test.bankProject.dto.*;
 import com.test.bankProject.entity.BankAccount;
 import com.test.bankProject.entity.BankFamilyAccount;
-import com.test.bankProject.dto.AuthenticationRequestDto;
-import com.test.bankProject.dto.BankAccountDto;
-import com.test.bankProject.dto.AbstractBankAccountDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,12 +26,12 @@ public class ServiceAdmin {
         BankAccount adminFamily = componentForService.searchBankAccountByToken(token);
         BankFamilyAccount bankFamilyAccount = adminFamily.getBankFamilyAccount();
         List<BankAccount> allFamily = bankFamilyAccount.getBankAccounts();
-        return BankAccountDto.listUsers(allFamily, adminFamily);
+        return ImplementDto.listFamilyUsers(allFamily, adminFamily, componentForService);
     }
 
     public AbstractBankAccountDto familyAccount(String token) {
         BankAccount adminFamily = componentForService.searchBankAccountByToken(token);
-        return BankFamilyAccountDto.anyBankFamilyAccountDto(adminFamily.getBankFamilyAccount());
+        return ImplementDto.infoAnyFamilyAccountDto(adminFamily.getBankFamilyAccount(),componentForService);
     }
 
     public void createNewFamilyAccount (String token){
@@ -47,10 +44,10 @@ public class ServiceAdmin {
 
     }
 
-    public String addNewPersonFamily(String token, AuthenticationRequestDto authenticationRequestDto){
+    public String addNewPersonFamily(String token, RequestDto requestDto){
 
         BankAccount adminFamily = componentForService.searchBankAccountByToken(token);
-        BankAccount bankAccountNewPersonFamily = componentForService.searchBankAccountByID(authenticationRequestDto.getId());
+        BankAccount bankAccountNewPersonFamily = componentForService.searchBankAccountByID(requestDto.getId());
         BankFamilyAccount bankFamilyAccount = adminFamily.getBankFamilyAccount();
 
         if(bankAccountNewPersonFamily.getBankFamilyAccount()==null) {
@@ -69,7 +66,7 @@ public class ServiceAdmin {
 
     }
 
-    public void limitMoneyForAllFamily (String token, AuthenticationRequestDto authenticationRequestDto, boolean onDay){
+    public void limitMoneyForAllFamily (String token, RequestDto requestDto, boolean onDay){
 
         BankAccount adminFamily = componentForService.searchBankAccountByToken(token);
         BankFamilyAccount bankFamilyAccount = adminFamily.getBankFamilyAccount();
@@ -81,31 +78,31 @@ public class ServiceAdmin {
         }
         bankFamilyAccount.setBankAccounts(bankAccountList);
         componentForService.saveBankFamilyAccount(
-                (BankFamilyAccount) componentForService.logicStaticOrDayLimit(bankFamilyAccount,authenticationRequestDto,onDay));
+                (BankFamilyAccount) componentForService.logicStaticOrDayLimit(bankFamilyAccount, requestDto,onDay));
 
     }
 
-    public AbstractBankAccountDto limitMoneyForOneMemberFamily(String token, AuthenticationRequestDto authenticationRequestDto, boolean onDay) {
+    public AbstractBankAccountDto limitMoneyForOneMemberFamily(String token, RequestDto requestDto, boolean onDay) {
 
         BankAccount adminFamily = componentForService.searchBankAccountByToken(token);
-        BankAccount bankAccountLimit = componentForService.searchBankAccountByID(authenticationRequestDto.getId());
+        BankAccount bankAccountLimit = componentForService.searchBankAccountByID(requestDto.getId());
 
         if(adminFamily.getId().equals(bankAccountLimit.getBankFamilyAccount().getBankAdminFamilyAccountId())&&
             !bankAccountLimit.isLockAccount())
         {
             bankAccountLimit.setFamilyLimitLock(false);
-            componentForService.logicStaticOrDayLimit(bankAccountLimit,authenticationRequestDto,onDay);
+            componentForService.logicStaticOrDayLimit(bankAccountLimit, requestDto,onDay);
             componentForService.saveBankAccount(bankAccountLimit);
-            return BankAccountDto.infoAnyAccount(bankAccountLimit, adminFamily);
+            return ImplementDto.infoAnyAccount(bankAccountLimit, componentForService);
         }
         else log.error("error!");
         return null;
     }
 
     //Снятие личных ограничений с пользователя и открыт доступ к общему лимиту денег для снятия всей семьи
-    public AbstractBankAccountDto liftingOfPersonalRestrictions(String token, AuthenticationRequestDto authenticationRequestDto) {
+    public AbstractBankAccountDto liftingOfPersonalRestrictions(String token, RequestDto requestDto) {
         BankAccount adminFamily = componentForService.searchBankAccountByToken(token);
-        BankAccount bankAccountFamilyPerson = componentForService.searchBankAccountByID(authenticationRequestDto.getId());
+        BankAccount bankAccountFamilyPerson = componentForService.searchBankAccountByID(requestDto.getId());
 
         if(adminFamily.getId().equals(bankAccountFamilyPerson.getBankFamilyAccount().getBankAdminFamilyAccountId())&&
             !bankAccountFamilyPerson.isLockAccount())
@@ -113,7 +110,7 @@ public class ServiceAdmin {
             bankAccountFamilyPerson.setFamilyLimitLock(true);
             componentForService.getBankAccountRepository()
                     .save((BankAccount) componentForService.logicForLiftingOfRestrictions(bankAccountFamilyPerson));
-            return BankAccountDto.infoAnyAccount(bankAccountFamilyPerson, adminFamily);
+            return ImplementDto.infoAnyAccount(bankAccountFamilyPerson, componentForService);
         }
         return null;
     }

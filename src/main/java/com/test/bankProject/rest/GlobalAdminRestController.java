@@ -1,6 +1,6 @@
 package com.test.bankProject.rest;
 
-import com.test.bankProject.dto.AuthenticationRequestDto;
+import com.test.bankProject.dto.RequestDto;
 import com.test.bankProject.dto.AbstractBankAccountDto;
 import com.test.bankProject.service.ServiceGlobalAdmin;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,56 +29,56 @@ public class GlobalAdminRestController {
 
     @PostMapping("static/limitForAll")
     public ResponseEntity<List<AbstractBankAccountDto>>  staticLimitForAll(@RequestHeader(name = "Authorization") String token,
-                                                                           @RequestBody AuthenticationRequestDto authenticationRequestDto) {
-        serviceGlobalAdmin.limitForAll(token, authenticationRequestDto, false);
+                                                                           @RequestBody RequestDto requestDto) {
+        serviceGlobalAdmin.limitForAll(token, requestDto, false);
         return new ResponseEntity<>(serviceGlobalAdmin.allUserInBankSystem(token), HttpStatus.OK);
     }
 
     @PostMapping("onDay/limitForAll")
     public ResponseEntity<List<AbstractBankAccountDto>>  onDayLimitForAll(@RequestHeader(name = "Authorization") String token,
-                                                                          @RequestBody AuthenticationRequestDto authenticationRequestDto) {
-        serviceGlobalAdmin.limitForAll(token,authenticationRequestDto, true);
+                                                                          @RequestBody RequestDto requestDto) {
+        serviceGlobalAdmin.limitForAll(token, requestDto, true);
         return new ResponseEntity<>(serviceGlobalAdmin.allUserInBankSystem(token), HttpStatus.OK);
     }
 
     @PostMapping("static/limitForSelectedFamily")
     public ResponseEntity<AbstractBankAccountDto> staticLimitForSelectedFamily (@RequestHeader (name = "Authorization") String token,
-                                                                                @RequestBody AuthenticationRequestDto authenticationRequestDto)
+                                                                                @RequestBody RequestDto requestDto)
     {
-        return new ResponseEntity<>(serviceGlobalAdmin.limitForSelectedFamily(token, authenticationRequestDto, false),HttpStatus.OK);
+        return new ResponseEntity<>(serviceGlobalAdmin.limitForSelectedFamily(token, requestDto, false),HttpStatus.OK);
     }
 
     @PostMapping("onDay/limitForSelectedFamily")
     public ResponseEntity<AbstractBankAccountDto> onDayLimitForSelectedFamily (@RequestHeader (name = "Authorization") String token,
-                                                                               @RequestBody AuthenticationRequestDto authenticationRequestDto)
+                                                                               @RequestBody RequestDto requestDto)
     {
-        return new ResponseEntity<>(serviceGlobalAdmin.limitForSelectedFamily(token, authenticationRequestDto, true),HttpStatus.OK);
+        return new ResponseEntity<>(serviceGlobalAdmin.limitForSelectedFamily(token, requestDto, true),HttpStatus.OK);
     }
 
     @PostMapping("static/limitForSelectedPerson")
     public ResponseEntity<AbstractBankAccountDto> staticLimitForSelectedPerson (@RequestHeader (name = "Authorization") String token,
-                                                                                @RequestBody AuthenticationRequestDto authenticationRequestDto)
+                                                                                @RequestBody RequestDto requestDto)
     {
-        return new ResponseEntity<>(serviceGlobalAdmin.limitForSelectedPerson(token, authenticationRequestDto, false),HttpStatus.OK);
+        return new ResponseEntity<>(serviceGlobalAdmin.limitForSelectedPerson(token, requestDto, false),HttpStatus.OK);
     }
 
     @PostMapping("onDay/limitForSelectedPerson")
     public ResponseEntity<AbstractBankAccountDto> onDayLimitForSelectedPerson (@RequestHeader (name = "Authorization") String token,
-                                                                               @RequestBody AuthenticationRequestDto authenticationRequestDto)
+                                                                               @RequestBody RequestDto requestDto)
     {
-        return new ResponseEntity<>(serviceGlobalAdmin.limitForSelectedPerson(token, authenticationRequestDto, true), HttpStatus.OK);
+        return new ResponseEntity<>(serviceGlobalAdmin.limitForSelectedPerson(token, requestDto, true), HttpStatus.OK);
     }
 
     @PostMapping(value = "liftingOfPersonalRestrictions/ForOneFamily")
     public void liftingOfPersonalRestrictions(@RequestHeader(name = "Authorization") String token,
-                                                        @RequestBody AuthenticationRequestDto authenticationRequestDto){
-        serviceGlobalAdmin.liftingOfPersonalRestrictionsForFamily(token,authenticationRequestDto);
+                                                        @RequestBody RequestDto requestDto){
+        serviceGlobalAdmin.liftingOfPersonalRestrictionsForFamily(token, requestDto);
     }
 
     @PostMapping(value = "liftingOfPersonalRestrictions/ForOnePerson")
     public void liftingOfPersonalRestrictionsForPerson(@RequestHeader(name = "Authorization") String token,
-                                                       @RequestBody AuthenticationRequestDto authenticationRequestDto){
-        serviceGlobalAdmin.liftingOfPersonalRestrictionsForPerson(token, authenticationRequestDto);
+                                                       @RequestBody RequestDto requestDto){
+        serviceGlobalAdmin.liftingOfPersonalRestrictionsForPerson(token, requestDto);
     }
 
     @PostMapping(value = "liftingOfPersonalRestrictions/ForAll")

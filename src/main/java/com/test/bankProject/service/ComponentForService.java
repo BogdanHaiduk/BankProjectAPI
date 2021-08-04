@@ -1,7 +1,7 @@
 package com.test.bankProject.service;
 
 
-import com.test.bankProject.dto.AuthenticationRequestDto;
+import com.test.bankProject.dto.RequestDto;
 import com.test.bankProject.entity.BankAccount;
 import com.test.bankProject.entity.BankFamilyAccount;
 import com.test.bankProject.entity.BaseEntity;
@@ -61,9 +61,9 @@ public class ComponentForService {
         return bankAccountRepository.getById(id);
     }
 
-    public BaseEntity logicStaticOrDayLimit(BaseEntity baseEntity, AuthenticationRequestDto authenticationRequestDto, boolean onDay){
+    public BaseEntity logicStaticOrDayLimit(BaseEntity baseEntity, RequestDto requestDto, boolean onDay){
         if ((!baseEntity.isLockAccount())) {
-            baseEntity.setLimitStatic(authenticationRequestDto.getLimitMoney());
+            baseEntity.setLimitStatic(requestDto.getLimitMoney());
             if (!onDay) {
                 baseEntity.setLimitLockTime(false);
                 baseEntity.setDateForLimit(null);

@@ -1,6 +1,6 @@
 package com.test.bankProject.rest;
 
-import com.test.bankProject.dto.AuthenticationRequestDto;
+import com.test.bankProject.dto.RequestDto;
 import com.test.bankProject.dto.AbstractBankAccountDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,16 +30,16 @@ public class UserRestControllerV1 {
 //выдача наличных
     @PostMapping("/cashWithdrawal")
     public ResponseEntity<Map<Object,Object>> cashWithdrawal(@RequestHeader(name = "Authorization")String token,
-                                              @RequestBody AuthenticationRequestDto authenticationRequestDto)
+                                              @RequestBody RequestDto requestDto)
     {
-        return new ResponseEntity<>(serviceUser.cashWithdrawal(token, authenticationRequestDto),HttpStatus.OK);
+        return new ResponseEntity<>(serviceUser.cashWithdrawal(token, requestDto),HttpStatus.OK);
     }
 
 //пополнение наличных
     @PostMapping("/accountReplenishment")
     public ResponseEntity<Map<Object,Object>> accountReplenishment(@RequestHeader(name = "Authorization") String token,
-                                               @RequestBody AuthenticationRequestDto authenticationRequestDto)
+                                               @RequestBody RequestDto requestDto)
     {
-        return new ResponseEntity<>(serviceUser.accountReplenishment(token, authenticationRequestDto), HttpStatus.OK);
+        return new ResponseEntity<>(serviceUser.accountReplenishment(token, requestDto), HttpStatus.OK);
     }
 }
