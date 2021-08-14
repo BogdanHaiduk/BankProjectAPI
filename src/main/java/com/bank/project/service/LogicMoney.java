@@ -54,7 +54,7 @@ public class LogicMoney {
                         setBalanceMoneyFamily(money.subtract(cashWithdrawal));
                 bankAccount.getBankFamilyAccount().
                         setLimitToday(limit.subtract(cashWithdrawal));
-                componentForService.getBankAccountRepository().save(bankAccount);
+                componentForService.saveBankAccount(bankAccount);
             }
         }
     }

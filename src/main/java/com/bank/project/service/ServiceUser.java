@@ -70,7 +70,6 @@ public class ServiceUser {
         }
     }
 
-
     public AbstractBankAccountDto myAccount(String token) {
         BankAccount bankAccount = componentForService.searchBankAccountByToken(token);
         BankAccount adminFamily = null;
@@ -103,7 +102,7 @@ public class ServiceUser {
         BigDecimal cashReplenishment = requestDto.getWithdrawalOrReplenishment();
         if(cashReplenishment.signum()>0) {
             bankFamilyAccount.setBalanceMoneyFamily(balance.add(cashReplenishment));
-            componentForService.getBankAccountFamilyRepository().save(bankFamilyAccount);
+            componentForService.saveBankFamilyAccount(bankFamilyAccount);
         }
         result = new LinkedHashMap<>();
         result.put("accountReplenishment", requestDto.getWithdrawalOrReplenishment());
